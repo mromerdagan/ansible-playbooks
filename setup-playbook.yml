@@ -1,0 +1,39 @@
+---
+
+- name: Set up git
+  connection: local
+  gather_facts: false
+  hosts: 127.0.0.1
+  tasks:
+  
+  - name: Configure git
+    git_config:
+      name: "{{ item.name }}"
+      scope: "{{ item.scope }}"
+      value: "{{ item.value }}"
+    loop:
+      - { name: 'user.name', scope: 'global', value: 'Omer Dagan' }
+      - { name: 'user.email', scope: 'global', value: "{{ lookup('env','EMAIL') }}" }
+      - { name: 'alias.lola', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit --all" }
+      - { name: 'alias.lol', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit" }
+      - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
+  
+  - name: Create directory for git repositories
+    file:
+      path: /home/omerda/git
+      state: directory
+
+  - name: Add git hosts to known hosts
+    shell: "ssh-keygen -F {{ item }} >/dev/null || ssh-keyscan -H {{ item }} >> ~/.ssh/known_hosts"
+    with_list:
+      - es-tfs01-il
+      - es-tfs01-il.essencesecurity.com
+
+  - name: Clone repositories
+    git:
+      repo: "{{ item.repo }}"
+      dest: "{{ item.dest }}"
+      recursive: yes
+    loop:
+      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/VF4_Linux', dest: '/home/omerda/git/VF4_Linux' }
+      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/open_source', dest: '/home/omerda/git/open_source' }
