@@ -31,6 +31,19 @@
       - { name: 'diff.tool', scope: 'global', value: "vimdiff" }
       - { name: 'merge.tool', scope: 'global', value: "vimdiff" }
       - { name: 'difftool.prompt', scope: 'global', value: "false" }
+ 
+  - name: Copy git prompt shell file
+    copy:
+      src: gitprompt.sh
+      dest: "{{ lookup('env','HOME') }}/.gitprompt.sh"
+      force: false
+      mode: 0644
+
+  - name: Source git prompt from .bashrc
+    lineinfile:
+      path: "{{ lookup('env','HOME') }}/.bashrc"
+      regexp: '\s*\[ -f \$HOME/.gitprompt \] && . \$HOME/.gitprompt\s*'
+      line: '[ -f $HOME/.gitprompt ] && . $HOME/.gitprompt'
   
   - name: Create directory for git repositories
     file:
