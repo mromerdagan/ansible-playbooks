@@ -1,0 +1,16 @@
+#!/bin/bash
+
+die() {
+	echo >&2 "$@"
+	exit 1
+}
+
+## Generate ssh key pair
+ssh_private_key="$HOME/.ssh/id_rsa"
+if ! [ -f "$ssh_private_key" ]; then
+	ssh-keygen -t rsa -f "$ssh_private_key" -N ''
+fi
+
+# Install ansible
+sudo apt update
+sudo apt install ansible --assume-yes
