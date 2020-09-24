@@ -13,4 +13,19 @@
       regexp: '172.16.0.139\s\+es-tfs01-il$'
       line: '172.16.0.139 es-tfs01-il'
       state: present
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+  - name: Install required packages
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - make
+      - autoconf
+      - automake
+      - libtool
+      - debhelper
  
