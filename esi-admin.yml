@@ -1,0 +1,16 @@
+---
+
+- name: Set up git (admin)
+  connection: local
+  hosts: 127.0.0.1
+  gather_facts: false
+  become: yes
+
+  tasks:
+  - name: Add IP address of all hosts to all hosts
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '172.16.0.139\s\+es-tfs01-il$'
+      line: '172.16.0.139 es-tfs01-il'
+      state: present
+ 
