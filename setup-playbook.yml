@@ -6,13 +6,8 @@
   gather_facts: false
   vars:
     gitdir: "{{ lookup('env','HOME') }}/git"
-  vars_prompt:
-  - name: fullname
-    prompt: "Please enter full name"
-    private: no
-  - name: email
-    prompt: "Please enter your email address"
-    private: no
+    fullname: Omer Dagan
+    email: "{{ lookup('env', 'USER') }}@essence-grp.com"
             
   tasks:
   - name: Configure git
