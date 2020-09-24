@@ -2,18 +2,27 @@
 
 - name: Set up git
   connection: local
-  gather_facts: false
   hosts: 127.0.0.1
+  gather_facts: false
+  vars:
+    gitdir: "{{ lookup('env','HOME') }}/git"
+  vars_prompt:
+  - name: fullname
+    prompt: "Please enter full name"
+    private: no
+  - name: email
+    prompt: "Please enter your email address"
+    private: no
+            
   tasks:
-  
   - name: Configure git
     git_config:
       name: "{{ item.name }}"
       scope: "{{ item.scope }}"
       value: "{{ item.value }}"
     loop:
-      - { name: 'user.name', scope: 'global', value: 'Omer Dagan' }
-      - { name: 'user.email', scope: 'global', value: "{{ lookup('env','EMAIL') }}" }
+      - { name: 'user.name', scope: 'global', value: "{{ fullname }}" }
+      - { name: 'user.email', scope: 'global', value: "{{ email }}" }
       - { name: 'alias.lola', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit --all" }
       - { name: 'alias.lol', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit" }
       - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
@@ -25,7 +34,7 @@
   
   - name: Create directory for git repositories
     file:
-      path: /home/omerda/git
+      path: "{{ gitdir }}"
       state: directory
 
   - name: Add Essence tfs (git) machines to known hosts
@@ -42,5 +51,5 @@
       dest: "{{ item.dest }}"
       recursive: yes
     loop:
-      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/VF4_Linux', dest: '/home/omerda/git/VF4_Linux' }
-      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/open_source', dest: '/home/omerda/git/open_source' }
+      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/VF4_Linux', dest: '{{ gitdir }}/VF4_Linux' }
+      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/open_source', dest: '{{ gitdir }}/open_source' }
