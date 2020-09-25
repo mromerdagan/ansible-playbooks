@@ -77,6 +77,17 @@
     with_list:
       - es-tfs01-il
       - es-tfs01-il.essencesecurity.com
+ 
+  - name: Clone opt/telit
+    git:
+      repo: "ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/telit"
+      dest: "/opt/telit"
+      recursive: yes
+ 
+  - name: Remove .git data from /opt/telit to save storage
+    file: 
+      path: "/opt/telit/.git"
+      state: absent
 
   - name: Clone repositories
     git:
