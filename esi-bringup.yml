@@ -28,11 +28,14 @@
       name: "{{ item }}"
       state: present
     with_items:
+      - openssh-server
+      - git
       - make
       - autoconf
       - automake
       - libtool
       - debhelper
+      - build-essential
     become: yes
  
   - name: Configure git

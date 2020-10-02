@@ -18,5 +18,6 @@ fi
 sudo apt update
 sudo apt install ansible --assume-yes
 
-# Run ansible script
+echo "I: Now make sure to copy ssh public key to TFS"
+echo "   Then run: 'ansible-playbook --ask-become-pass esi-bringup.yml'"
 
