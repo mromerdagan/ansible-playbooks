@@ -77,6 +77,7 @@
     with_items:
       - 'alias cdgit="cd {{ gitdir }}"'
       - 'alias cdvf4="cd {{ gitdir }}/VF4_Linux"'
+      - "alias cdmem=\"cd {{ lookup('env','HOME') }}/memorize\""
   
   - name: Create directory for git repositories
     file:
@@ -97,11 +98,6 @@
       dest: "/opt/telit"
       recursive: yes
  
-  - name: Remove .git data from /opt/telit to save storage
-    file: 
-      path: "/opt/telit/.git"
-      state: absent
-
   - name: Clone repositories
     git:
       repo: "{{ item.repo }}"
