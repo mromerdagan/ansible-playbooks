@@ -18,6 +18,17 @@
       state: present
     become: yes
 
+  - name: Add preferences to .vimrc
+    lineinfile:
+      dest: "$HOME/.vimrc"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+      create: yes
+    loop:
+      - { regexp: 'colorscheme\s+.*', line: 'colorscheme darkblue' }
+      - { regexp: 'set\s+(no)?number', line: 'set number' }
+
   - name: Add environment variables to ~/.profile
     lineinfile:
       dest: $HOME/.profile
