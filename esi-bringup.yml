@@ -13,7 +13,7 @@
   - name: Add IP address for essence hosts 
     lineinfile:
       dest: /etc/hosts
-      regexp: '172.16.0.139\s\+es-tfs01-il$'
+      regexp: '172.16.0.139\s+es-tfs01-il$'
       line: '172.16.0.139 es-tfs01-il'
       state: present
     become: yes
