@@ -57,6 +57,7 @@
       - libtool
       - debhelper
       - build-essential
+      - dput
     become: yes
  
   - name: Configure git
@@ -69,6 +70,7 @@
       - { name: 'user.email', scope: 'global', value: "{{ email }}" }
       - { name: 'alias.lola', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit --all" }
       - { name: 'alias.lol', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit" }
+      - { name: 'alias.lolau', scope: 'global', value: "log --graph --decorate --pretty=format:\"%C(yellow)%h %C(green bold)%d %C(blue)%an %Creset%s\" --abbrev-commit" }
       - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
       - { name: 'alias.difftoolcommit', scope: 'global', value: '!sh -c "git difftool $1^1..$1" -' }
       - { name: 'alias.subup', scope: 'global', value: "submodule update --recursive" }
