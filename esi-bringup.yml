@@ -74,6 +74,7 @@
       - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
       - { name: 'alias.difftoolcommit', scope: 'global', value: '!sh -c "git difftool $1^1..$1" -' }
       - { name: 'alias.subup', scope: 'global', value: "submodule update --recursive" }
+      - { name: 'alias.last', scope: 'global', value: "log -1 --name-status" }
       - { name: 'diff.tool', scope: 'global', value: "vimdiff" }
       - { name: 'merge.tool', scope: 'global', value: "vimdiff" }
       - { name: 'difftool.prompt', scope: 'global', value: "false" }
