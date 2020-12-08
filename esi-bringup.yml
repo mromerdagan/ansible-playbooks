@@ -58,6 +58,7 @@
       - debhelper
       - build-essential
       - dput
+      - ccache
     become: yes
  
   - name: Configure git
