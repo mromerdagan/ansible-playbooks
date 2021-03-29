@@ -1,0 +1,64 @@
+"execute pathogen#infect()
+
+syntax on
+colorscheme elflord
+set mouse=r
+set number
+set smartindent
+set noexpandtab "Do not make tab pressing into spaces
+set tabstop=4
+set shiftwidth=4
+set copyindent
+set preserveindent
+set colorcolumn=100
+set textwidth=100
+set showmatch		"show matching brackets
+filetype plugin indent on
+set hlsearch
+
+" Disable shellcheck don't use 'local' warning
+let g:syntastic_sh_shellcheck_args="-e SC2039"
+
+if &diff
+  syntax off
+  set softtabstop=2
+  set tabstop=2
+  set diffopt+=iwhite
+  set hlsearch
+
+  map gs :call IgnWhitespace()<CR>
+  function! IgnWhitespace()
+    if &diffopt =~ 'iwhite'
+      set diffopt-=iwhite
+    else
+      set diffopt+=iwhite
+    endif
+  endfunction
+endif
+
+" Ctags
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR> " Open tag under cursor in new tab
+
+" Always show statusline
+set laststatus=2
+"let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='fairyfloss'
+
+" netrw config- netrw is file explorer (built in)
+" Open with :Vexplore, :Texplore :Sexplore
+let g:netrw_banner = 0 " No banner
+let g:netrw_browse_split = 3 " Open files in new tab
+let g:netrw_liststyle = 3 " Wide mode (can be changed dynamically with 'i')
+let g:netrw_winsize = 21 " Limit size to 21 chars
+
+"YouCompleteme customization
+
+let g:ycm_confirm_extra_conf = 0
+set completeopt-=preview                "disable preview window
+
+"Add fancy hightlights
+highlight hl1 ctermfg=black ctermbg=magenta guifg=black guibg=IndianRed
+highlight hl2 ctermfg=black ctermbg=green guifg=black guibg=chartreuse
+highlight hl3 ctermfg=black ctermbg=cyan guifg=black guibg=DeepSkyBlue
+highlight hl4 ctermfg=white ctermbg=DarkBlue guifg=white guibg=firebrick
+highlight hl5 ctermfg=white ctermbg=DarkGreen guifg=white guibg=DarkGreen

@@ -1,7 +1,7 @@
 ---
 
 - name: Set up linux work station
-  hosts: 192.168.149.43
+  hosts: nodes
   gather_facts: false
   vars:
     gitdir: "{{ lookup('env','HOME') }}/git"
@@ -16,18 +16,6 @@
       line: '172.16.0.139 es-tfs01-il'
       state: present
     become: yes
-
-  - name: Add preferences to .vimrc
-    lineinfile:
-      dest: "$HOME/.vimrc"
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-      state: present
-      create: yes
-    loop:
-      - { regexp: 'syntax\s+.*', line: 'syntax on' }
-      - { regexp: 'colorscheme\s+.*', line: 'colorscheme elflord' }
-      - { regexp: 'set\s+(no)?number', line: 'set number' }
 
   - name: Add environment variables to ~/.profile
     lineinfile:
@@ -52,6 +40,10 @@
       - openssh-server
       - konsole
       - vim
+      - vim-airline
+      - vim-airline-themes
+      - vim-fugitive
+      - vim-syntastic
       - git
       - make
       - autoconf
@@ -101,10 +93,13 @@
  
   - name: Copy git prompt shell file
     copy:
-      src: gitprompt.sh
-      dest: "{{ lookup('env','HOME') }}/.gitprompt.sh"
-      force: false
+      src: "{{ item.source }}"
+      dest: "{{ item.dest }}"
+      force: "{{ item.force }}"
       mode: 0644
+    loop:
+        - { source: '../srcfiles/gitprompt.sh', dest: "{{ lookup('env','HOME') }}/.gitprompt.sh", force: true}
+        - { source: '../srcfiles/vimrc', dest: "{{ lookup('env','HOME') }}/.vimrc", force: flase }
 
   - name: Source git prompt from .bashrc
     lineinfile:
