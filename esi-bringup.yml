@@ -1,8 +1,7 @@
 ---
 
 - name: Set up linux work station
-  connection: local
-  hosts: 127.0.0.1
+  hosts: 192.168.149.43
   gather_facts: false
   vars:
     gitdir: "{{ lookup('env','HOME') }}/git"
@@ -26,7 +25,8 @@
       state: present
       create: yes
     loop:
-      - { regexp: 'colorscheme\s+.*', line: 'colorscheme darkblue' }
+      - { regexp: 'syntax\s+.*', line: 'syntax on' }
+      - { regexp: 'colorscheme\s+.*', line: 'colorscheme elflord' }
       - { regexp: 'set\s+(no)?number', line: 'set number' }
 
   - name: Add environment variables to ~/.profile
@@ -50,6 +50,8 @@
       state: present
     with_items:
       - openssh-server
+      - konsole
+      - vim
       - git
       - make
       - autoconf
@@ -59,6 +61,23 @@
       - build-essential
       - dput
       - ccache
+    become: yes
+
+  - name: Add needed groups to user
+    user:
+      name: "{{ lookup('env', 'USER') }}"
+      shell: /bin/bash
+      groups: sudo,adm,users,plugdev,dialout
+      append: yes
+    become: yes
+
+  - name: Add udev config needed to access adb devuces
+    copy:
+      dest: /etc/udev/rules.d/51-android.rules
+      content: |
+        SUBSYSTEM=="usb", ATTR{idVendor}=="1bc7", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTR{idVendor}=="2c7c", MODE="0666", GROUP="plugdev"
     become: yes
  
   - name: Configure git
@@ -117,17 +136,3 @@
       - es-tfs01-il
       - es-tfs01-il.essencesecurity.com
  
-  - name: Clone opt/telit
-    git:
-      repo: "ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/telit"
-      dest: "/opt/telit"
-      recursive: yes
- 
-  - name: Clone repositories
-    git:
-      repo: "{{ item.repo }}"
-      dest: "{{ item.dest }}"
-      recursive: yes
-    loop:
-      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/VF4_Linux', dest: '{{ gitdir }}/VF4_Linux' }
-      - { repo: 'ssh://es-tfs01-il:22/tfs/EssenceCollection/SecuritasDirect/_git/open_source', dest: '{{ gitdir }}/open_source' }
