@@ -130,4 +130,22 @@
     with_list:
       - es-tfs01-il
       - es-tfs01-il.essencesecurity.com
+
+  - name: Check if vscode is installed
+    command: dpkg-query -W code
+    register: vscode_check_deb
+    failed_when: vscode_check_deb.rc > 1
+    changed_when: vscode_check_deb.rc == 1
+
+  - name: Download vscode
+    get_url:
+      url=https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+      dest="{{ lookup('env','HOME') }}/Downloads/vscode.deb"
+    when: vscode_check_deb.rc == 1
+
+  - name: Install vscode
+    apt: deb="{{ lookup('env','HOME') }}/Downloads/vscode.deb"
+    when: vscode_check_deb.rc == 1
+    sudo: true
+    become: yes
  
