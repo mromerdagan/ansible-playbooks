@@ -53,6 +53,8 @@
       - build-essential
       - dput
       - ccache
+      - fastboot
+      - ctags
     become: yes
 
   - name: Add needed groups to user
