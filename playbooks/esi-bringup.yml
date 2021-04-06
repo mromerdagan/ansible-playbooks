@@ -150,4 +150,27 @@
     when: vscode_check_deb.rc == 1
     sudo: true
     become: yes
+
+  - name: Add pathogen plugin manager to vim
+    get_url:
+      url: https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+      dest: "{{ lookup('env','HOME') }}/.vim/autoload/pathogen.vim"
+      mode: 664
+      force: no
+
+  - name: Clone youCompleteMe vim addon
+    git:
+      repo: https://github.com/ycm-core/YouCompleteMe.git
+      dest: "{{ lookup('env','HOME') }}/.vim/bundle/youcompleteme"
+      version: origin/legacy-vim
+
+  - name: Update youcompleteme submodules
+    shell:
+      cmd: git submodule update --init --recursive
+      chdir: "{{ lookup('env','HOME') }}/.vim/bundle/youcompleteme"
+
+  - name: Install youcomplete me vim addon for c/cpp only
+    shell:
+      cmd: python3 install.py --clangd-completer
+      chdir: "{{ lookup('env','HOME') }}/.vim/bundle/youcompleteme"
  
