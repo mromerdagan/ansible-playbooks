@@ -55,6 +55,8 @@
       - ccache
       - fastboot
       - ctags
+      - devscripts
+      - mosquitto-clients
     become: yes
 
   - name: Add needed groups to user
