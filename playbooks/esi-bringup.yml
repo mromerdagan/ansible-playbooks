@@ -44,11 +44,13 @@
       - vim-airline-themes
       - vim-fugitive
       - vim-syntastic
+      - curl
       - git
       - make
       - autoconf
       - automake
       - libtool
+      - cmake
       - debhelper
       - build-essential
       - dput
@@ -57,6 +59,8 @@
       - ctags
       - devscripts
       - mosquitto-clients
+      - libpython3-dev
+      - jq
     become: yes
 
   - name: Add needed groups to user
@@ -103,7 +107,7 @@
       mode: 0644
     loop:
         - { source: '../srcfiles/gitprompt.sh', dest: "{{ lookup('env','HOME') }}/.gitprompt.sh", force: true}
-        - { source: '../srcfiles/vimrc', dest: "{{ lookup('env','HOME') }}/.vimrc", force: flase }
+        - { source: '../srcfiles/vimrc', dest: "{{ lookup('env','HOME') }}/.vimrc", force: false }
 
   - name: Source git prompt from .bashrc
     lineinfile:
@@ -127,14 +131,6 @@
       path: "{{ gitdir }}"
       state: directory
 
-  - name: Add Essence tfs (git) machines to known hosts
-    shell: "if ssh-keygen -F {{ item }} >/dev/null; then echo 'unchanged'; else ssh-keyscan -H {{ item }} >> ~/.ssh/known_hosts; echo changed; fi"
-    register: known_hosts_changed
-    changed_when: known_hosts_changed.stdout == "changed"
-    with_list:
-      - es-tfs01-il
-      - es-tfs01-il.essencesecurity.com
-
   - name: Check if vscode is installed
     command: dpkg-query -W code
     register: vscode_check_deb
@@ -150,14 +146,21 @@
   - name: Install vscode
     apt: deb="{{ lookup('env','HOME') }}/Downloads/vscode.deb"
     when: vscode_check_deb.rc == 1
-    sudo: true
     become: yes
+
+  - name: Create vim plugins directories
+    file:
+      path: "{{ lookup('env','HOME') }}/.vim/autoload"
+      state: directory
+    with_items:
+      - "{{ lookup('env','HOME') }}/.vim/autoload"
+      - "{{ lookup('env','HOME') }}/.vim/bundle"
 
   - name: Add pathogen plugin manager to vim
     get_url:
       url: https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
       dest: "{{ lookup('env','HOME') }}/.vim/autoload/pathogen.vim"
-      mode: 664
+      mode: 0664
       force: no
 
   - name: Clone youCompleteMe vim addon
