@@ -37,30 +37,51 @@
       name: "{{ item }}"
       state: present
     with_items:
-      - openssh-server
+      - android-tools-adb
+      - android-tools-fastboot
+      - autoconf
+      - automake
+      - bison
+      - build-essential
+      - ccache
+      - cmake
+      - ctags
+      - curl
+      - debhelper
+      - devscripts
+      - dput
+      - dselect
+      - fakeroot
+      - fastboot
+      - flex
+      - g++
+      - git
+      - jq
       - konsole
+      - libcurl4-gnutls-dev
+      - libffi-dev
+      - libjpeg-dev
+      - libncurses5-dev
+      - libpython3-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - libtool
+      - make
+      - mosquitto
+      - mosquitto-clients
+      - openssh-server
+      - pkg-config
+      - python
+      - python3
+      - sqlite3
+      - squashfs-tools
+      - tclsh
+      - uuid-dev
       - vim
       - vim-airline
       - vim-airline-themes
       - vim-fugitive
       - vim-syntastic
-      - curl
-      - git
-      - make
-      - autoconf
-      - automake
-      - libtool
-      - cmake
-      - debhelper
-      - build-essential
-      - dput
-      - ccache
-      - fastboot
-      - ctags
-      - devscripts
-      - mosquitto-clients
-      - libpython3-dev
-      - jq
     become: yes
 
   - name: Add needed groups to user
