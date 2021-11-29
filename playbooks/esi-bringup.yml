@@ -66,6 +66,7 @@
       - libsqlite3-dev
       - libssl-dev
       - libtool
+      - lsb-release
       - make
       - mosquitto
       - mosquitto-clients
@@ -120,7 +121,7 @@
       - { name: 'merge.tool', scope: 'global', value: "vimdiff" }
       - { name: 'difftool.prompt', scope: 'global', value: "false" }
  
-  - name: Copy git prompt shell file
+  - name: Copy customization scripts (git prompt, vimrc, bash_aliases)
     copy:
       src: "{{ item.source }}"
       dest: "{{ item.dest }}"
@@ -129,24 +130,14 @@
     loop:
         - { source: '../srcfiles/gitprompt.sh', dest: "{{ lookup('env','HOME') }}/.gitprompt.sh", force: true}
         - { source: '../srcfiles/vimrc', dest: "{{ lookup('env','HOME') }}/.vimrc", force: false }
+        - { source: '../srcfiles/bash_aliases', dest: "{{ lookup('env','HOME') }}/.bash_aliases", force: false }
 
   - name: Source git prompt from .bashrc
     lineinfile:
       path: "{{ lookup('env','HOME') }}/.bashrc"
       regexp: '\s*\[ -f \$HOME/.gitprompt \] && . \$HOME/.gitprompt\s*'
       line: '[ -f $HOME/.gitprompt.sh ] && . $HOME/.gitprompt.sh'
- 
-  - name: Add bash aliases
-    lineinfile:
-      path: "{{ lookup('env','HOME') }}/.bash_aliases"
-      line: '{{ item }}'
-      state: present
-      create: true
-    with_items:
-      - 'alias cdgit="cd {{ gitdir }}"'
-      - 'alias cdvf4="cd {{ gitdir }}/VF4_Linux"'
-      - "alias cdmem=\"cd {{ lookup('env','HOME') }}/memorize\""
-  
+
   - name: Create directory for git repositories
     file:
       path: "{{ gitdir }}"
