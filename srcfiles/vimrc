@@ -21,6 +21,11 @@ set hlsearch
 
 " Disable shellcheck don't use 'local' warning
 let g:syntastic_sh_shellcheck_args="-e SC2039"
+" Disable shellcheck Can't follow non-constant source. Use a directive to specify location
+let g:syntastic_sh_shellcheck_args="-e SC1090"
+let g:syntastic_sh_shellcheck_args="-e SC1091"
+" Disable shellcheck In POSIX sh, 'local' is undefined
+let g:syntastic_sh_shellcheck_args="-e SC2039"
 
 if &diff
   syntax off
@@ -28,6 +33,7 @@ if &diff
   set tabstop=2
   set diffopt+=iwhite
   set hlsearch
+  vertical resize 150
 
   map gs :call IgnWhitespace()<CR>
   function! IgnWhitespace()
@@ -57,11 +63,12 @@ let g:netrw_winsize = 21 " Limit size to 21 chars
 "YouCompleteme customization
 
 let g:ycm_confirm_extra_conf = 0
+"let g:ycm_global_ycm_extra_conf = '~/Downloads/ycm_extra_conf.py'
 set completeopt-=preview                "disable preview window
 
 "Add fancy hightlights
 highlight hl1 ctermfg=black ctermbg=magenta guifg=black guibg=IndianRed
-highlight hl2 ctermfg=black ctermbg=green guifg=black guibg=chartreuse
+highlight hl2 ctermfg=white ctermbg=DarkGreen guifg=white guibg=DarkGreen
 highlight hl3 ctermfg=black ctermbg=cyan guifg=black guibg=DeepSkyBlue
-highlight hl4 ctermfg=white ctermbg=DarkBlue guifg=white guibg=firebrick
-highlight hl5 ctermfg=white ctermbg=DarkGreen guifg=white guibg=DarkGreen
+highlight hl4 ctermfg=black ctermbg=green guifg=black guibg=chartreuse
+highlight hl5 ctermfg=white ctermbg=DarkBlue guifg=white guibg=firebrick
