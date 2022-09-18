@@ -6,17 +6,9 @@
   vars:
     gitdir: "{{ lookup('env','HOME') }}/git"
     fullname: Omer Dagan
-    email: "{{ lookup('env', 'USER') }}@essence-grp.com"
+    email: "mr.omer.dagan@gmail.com"
 
   tasks:
-  - name: Add IP address for essence hosts 
-    lineinfile:
-      dest: /etc/hosts
-      regexp: '172.16.0.139\s+es-tfs01-il$'
-      line: '172.16.0.139 es-tfs01-il'
-      state: present
-    become: yes
-
   - name: Add environment variables to ~/.profile
     lineinfile:
       dest: $HOME/.profile
@@ -37,88 +29,62 @@
       name: "{{ item }}"
       state: present
     with_items:
-      - android-tools-adb
-      - android-tools-fastboot
-      - apache2
-      - autoconf
-      - automake
-      - bison
-      - build-essential
-      - ccache
-      - cmake
-      - ctags
-      - curl
-      - cppman
-      - cscope
-      - debhelper
-      - devscripts
-      - dput
-      - dselect
-      - dh-make
-      - dh-python
-      - docker
-      - docker.io
-      - fakeroot
-      - fastboot
-      - flex
-      - g++
-      - git
-      - jq
-      - konsole
-      - libcurl4-gnutls-dev
-      - libffi-dev
-      - libjpeg-dev
-      - libncurses5-dev
-      - libpython3-dev
-      - libsqlite3-dev
-      - libssl-dev
-      - libtool
-      - lynx
-      - lsb-release
-      - make
-      - markdown
-      - mosquitto
-      - mosquitto-clients
-      - openssh-server
-      - perl
-      - perl-doc
-      - pkg-config
-      - python
-      - python3
-      - pylint3
-      - psmisc
-      - screen
-      - shellcheck
-      - sqlite3
-      - squashfs-tools
-      - taskwarrior
-      - tclsh
-      - tree
-      - uuid-dev
-      - vim
-      - vim-airline
-      - vim-airline-themes
-      - vim-fugitive
-      - vim-syntastic
+        - apache2
+        - autoconf
+        - automake
+        - build-essential
+        - ccache
+        - cmake
+        - exuberant-ctags
+        - curl
+        - cppman
+        - cscope
+        - debhelper
+        - devscripts
+        - dput
+        - dh-make
+        - dh-python
+        - docker
+        - docker.io
+        - fakeroot
+        - g++
+        - git
+        - jq
+        - konsole
+        - lynx
+        - lsb-release
+        - make
+        - markdown
+        - mosquitto
+        - mosquitto-clients
+        - openssh-server
+        - perl
+        - perl-doc
+        - pkg-config
+        - python
+        - python3
+        - pylint3
+        - screen
+        - shellcheck
+        - sqlite3
+        - taskwarrior
+        - tree
+        - uuid-dev
+        - vim
+        - vim-airline
+        - vim-airline-themes
+        - vim-fugitive
+        - vim-syntastic
     become: yes
 
   - name: Add needed groups to user
     user:
       name: "{{ lookup('env', 'USER') }}"
       shell: /bin/bash
-      groups: sudo,adm,users,plugdev,dialout
+      groups: sudo,adm,users
       append: yes
     become: yes
 
-  - name: Add udev config needed to access adb devuces
-    copy:
-      dest: /etc/udev/rules.d/51-android.rules
-      content: |
-        SUBSYSTEM=="usb", ATTR{idVendor}=="1bc7", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="usb", ATTR{idVendor}=="2c7c", MODE="0666", GROUP="plugdev"
-    become: yes
- 
   - name: Configure git
     git_config:
       name: "{{ item.name }}"
@@ -128,7 +94,7 @@
       - { name: 'user.name', scope: 'global', value: "{{ fullname }}" }
       - { name: 'user.email', scope: 'global', value: "{{ email }}" }
       - { name: 'alias.lola', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit --all" }
-      - { name: 'alias.lol', scope: 'global', value: "log --graph --pretty=format:'%C(auto)%h%d (%cr) %C(blue bold)%an %Creset%s'" }
+      - { name: 'alias.lol', scope: 'global', value: "lol =  log --graph --pretty=format:'%C(auto)%h%d (%cr) %C(blue bold)%an  %Creset%s'" }
       - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
       - { name: 'alias.difftoolcommit', scope: 'global', value: '!sh -c "git difftool $1^1..$1" -' }
       - { name: 'alias.subup', scope: 'global', value: "submodule update --recursive" }
@@ -159,23 +125,6 @@
     file:
       path: "{{ gitdir }}"
       state: directory
-
-  - name: Check if vscode is installed
-    command: dpkg-query -W code
-    register: vscode_check_deb
-    failed_when: vscode_check_deb.rc > 1
-    changed_when: vscode_check_deb.rc == 1
-
-  - name: Download vscode
-    get_url:
-      url=https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
-      dest="{{ lookup('env','HOME') }}/Downloads/vscode.deb"
-    when: vscode_check_deb.rc == 1
-
-  - name: Install vscode
-    apt: deb="{{ lookup('env','HOME') }}/Downloads/vscode.deb"
-    when: vscode_check_deb.rc == 1
-    become: yes
 
   - name: Create vim plugins directories
     file:

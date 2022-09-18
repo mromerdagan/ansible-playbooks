@@ -1,12 +1,11 @@
 ## Directory navigation
+alias cdgit="cd $HOME/git"
 alias cdfin="cd $HOME/git/finance"
 alias cdmem="cd $HOME/memorize"
 alias cdedu="cd $HOME/git/edu"
+alias cdjournal="cd $HOME/git/edu/essence/jounral"
 
 ## Essence
-alias cdvf4="cd $HOME/git/VF4_Linux"
-alias cdgit="cd $HOME/git"
-alias cdjournal="cd $HOME/git/edu/essence/jounral"
 
 alias grepvf4="grep -rI \
 	--exclude=tags \
