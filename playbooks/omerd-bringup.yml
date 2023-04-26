@@ -26,9 +26,7 @@
 
   - name: Install Debian packages
     apt:
-      name: "{{ item }}"
-      state: present
-    with_items:
+      pkg:
         - apache2
         - autoconf
         - automake
@@ -49,6 +47,7 @@
         - fakeroot
         - g++
         - git
+        - gpg
         - jq
         - konsole
         - lynx
@@ -74,7 +73,9 @@
         - vim-airline
         - vim-airline-themes
         - vim-fugitive
+        - vim-python-jedi
         - vim-syntastic
+      state: present
     become: yes
 
   - name: Add needed groups to user
@@ -94,7 +95,7 @@
       - { name: 'user.name', scope: 'global', value: "{{ fullname }}" }
       - { name: 'user.email', scope: 'global', value: "{{ email }}" }
       - { name: 'alias.lola', scope: 'global', value: "log --graph --decorate --pretty=oneline --abbrev-commit --all" }
-      - { name: 'alias.lol', scope: 'global', value: "lol =  log --graph --pretty=format:'%C(auto)%h%d (%cr) %C(blue bold)%an  %Creset%s'" }
+      - { name: 'alias.lol', scope: 'global', value: "log --graph --pretty=format:'%C(auto)%h%d (%cr) %C(blue bold)%an  %Creset%s'" }
       - { name: 'alias.unstage', scope: 'global', value: "reset HEAD --" }
       - { name: 'alias.difftoolcommit', scope: 'global', value: '!sh -c "git difftool $1^1..$1" -' }
       - { name: 'alias.subup', scope: 'global', value: "submodule update --recursive" }
